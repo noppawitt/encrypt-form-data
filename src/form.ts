@@ -9,19 +9,19 @@ export function setupForm(el: HTMLFormElement) {
 
     const encrpyted = xor(new Uint8Array(arrayBuff), "secret");
 
-    fetch("/api/upload", {
-      method: "POST",
-      body: encrpyted,
-      headers: {
-        "Content-Type": `multipart/form-data; boundary=${boundary}`,
-      },
-    })
-      .then((response) => {
-        console.log(response.status);
-      })
-      .catch((error) => {
-        console.error(error);
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: encrpyted,
+        headers: {
+          "Content-Type": `multipart/form-data; boundary=${boundary}`,
+        },
       });
+
+      console.log(res.status);
+    } catch (error) {
+      console.error(error);
+    }
   });
 }
 
@@ -50,7 +50,6 @@ function createCustomFormData(formData: FormData, boundary: string): Blob {
     const footer = "\n";
     parts.push(header);
     if (value instanceof Blob) {
-      console.log(value.type);
       parts.push(` filename="${value.name}"\nContent-Type: ${value.type}\n\n`);
       parts.push(value);
     } else {
