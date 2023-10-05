@@ -7,12 +7,12 @@ export function setupForm(el: HTMLFormElement) {
     const blob = createCustomFormData(form, boundary);
     const arrayBuff = await blob.arrayBuffer();
 
-    const encrpyted = xor(new Uint8Array(arrayBuff), "secret");
+    const encrypted = xor(new Uint8Array(arrayBuff), "secret");
 
     try {
       const res = await fetch("/api/upload", {
         method: "POST",
-        body: encrpyted,
+        body: encrypted,
         headers: {
           "Content-Type": `multipart/form-data; boundary=${boundary}`,
         },
